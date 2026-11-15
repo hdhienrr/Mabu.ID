@@ -26,6 +26,25 @@
                         </p>
                     </div>
 
+                    <!-- Flash and Error Alerts -->
+                    @if (isset($errors) && $errors->any())
+                        <div class="mb-space-md p-3.5 rounded-xl bg-error/10 border border-error/20 text-error font-body-sm text-body-sm flex items-start gap-2.5">
+                            <span class="material-symbols-outlined text-[20px] shrink-0 mt-0.5">error</span>
+                            <div class="flex-1">
+                                @foreach ($errors->all() as $error)
+                                    <span>{{ $error }}</span>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+
+                    @if (session('success'))
+                        <div class="mb-space-md p-3.5 rounded-xl bg-success/10 border border-success/20 text-success font-body-sm text-body-sm flex items-center gap-2.5">
+                            <span class="material-symbols-outlined text-[20px] shrink-0">check_circle</span>
+                            <span>{{ session('success') }}</span>
+                        </div>
+                    @endif
+
                     <div
                         class="flex items-center justify-between p-space-xs bg-surface-container-low rounded-lg mb-space-lg border border-border-light">
                         <button
@@ -44,7 +63,7 @@
 
                     <form class="space-y-space-md" method="POST" action="{{ route('login') }}">
                         @csrf
-                        <input type="hidden" name="role" id="login-role" value="student">
+                        <input type="hidden" name="role" id="login-role" value="{{ old('role', 'student') }}">
 
                         <div>
                             <label class="block font-label-sm text-label-sm text-on-surface mb-1" for="identifier">
@@ -55,7 +74,7 @@
                                     class="material-symbols-outlined absolute left-space-md text-[20px] text-on-surface-variant pointer-events-none">alternate_email</span>
                                 <input
                                     class="w-full pl-11 pr-space-md py-2.5 rounded-lg bg-surface-container-low text-on-surface placeholder:text-text-faint-light font-body-sm text-body-sm focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-brand-500 transition-all border border-border-light"
-                                    id="identifier" name="email" placeholder="nama@email.com atau 0812..." required
+                                    id="identifier" name="email" value="{{ old('email') }}" placeholder="nama@email.com atau 0812..." required
                                     type="text" />
                             </div>
                         </div>

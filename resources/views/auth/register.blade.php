@@ -24,12 +24,27 @@
                 </p>
             </div>
 
+            <!-- Validation Errors Alert -->
+            @if (isset($errors) && $errors->any())
+                <div class="p-3.5 rounded-xl bg-error/10 border border-error/20 text-error font-body-sm text-body-sm flex items-start gap-2.5">
+                    <span class="material-symbols-outlined text-[20px] shrink-0 mt-0.5">error</span>
+                    <div class="flex-1">
+                        <span class="font-semibold block mb-0.5">Pendaftaran gagal:</span>
+                        <ul class="list-disc list-inside space-y-0.5 text-xs">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            @endif
+
             <div class="flex flex-col gap-space-xs">
                 <label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Pilih Jenis
                     Akun</label>
                 <div class="grid grid-cols-2 gap-space-xs p-1 bg-surface-container-low rounded-xl border border-border-light">
                     <button
-                        class="flex flex-col items-start p-space-sm rounded-lg text-left transition-all duration-200 bg-surface-container-lowest shadow-sm text-primary group border border-border-light"
+                        class="flex flex-col items-start p-space-sm rounded-lg text-left transition-all duration-200 {{ old('role', 'jobseeker') === 'jobseeker' ? 'bg-surface-container-lowest shadow-sm text-primary border border-border-light' : 'text-on-surface-variant hover:text-on-surface border border-transparent' }} group"
                         id="role-jobseeker-btn" onclick="setRole('jobseeker')" type="button">
                         <div class="flex items-center justify-between w-full mb-1">
                             <span
@@ -40,7 +55,7 @@
                             Umum</span>
                     </button>
                     <button
-                        class="flex flex-col items-start p-space-sm rounded-lg text-left transition-all duration-200 text-on-surface-variant hover:text-on-surface group border border-transparent"
+                        class="flex flex-col items-start p-space-sm rounded-lg text-left transition-all duration-200 {{ old('role') === 'employer' ? 'bg-surface-container-lowest shadow-sm text-primary border border-border-light' : 'text-on-surface-variant hover:text-on-surface border border-transparent' }} group"
                         id="role-employer-btn" onclick="setRole('employer')" type="button">
                         <div class="flex items-center justify-between w-full mb-1">
                             <span
@@ -56,7 +71,7 @@
             <form class="flex flex-col gap-space-md" method="POST" action="{{ route('register') }}"
                 onsubmit="return validateForm()">
                 @csrf
-                <input id="selected-role" name="role" type="hidden" value="jobseeker">
+                <input id="selected-role" name="role" type="hidden" value="{{ old('role', 'jobseeker') }}">
 
                 <div class="flex flex-col gap-1.5">
                     <label class="font-label-md text-label-md text-on-surface" for="fullname">Nama Lengkap</label>
@@ -65,7 +80,7 @@
                             class="material-symbols-outlined absolute left-3 text-[20px] text-on-surface-variant pointer-events-none">person</span>
                         <input
                             class="w-full pl-10 pr-4 py-2.5 rounded-lg bg-surface-container-low text-on-surface placeholder:text-text-faint-light font-body-sm text-body-sm focus:bg-surface-container-lowest focus:ring-2 focus:ring-brand-500 transition-all outline-none border border-border-light"
-                            id="fullname" name="name" placeholder="Contoh: Bagas Pratama" required type="text">
+                            id="fullname" name="name" value="{{ old('name') }}" placeholder="Contoh: Bagas Pratama" required type="text">
                     </div>
                 </div>
 
@@ -76,7 +91,7 @@
                             class="material-symbols-outlined absolute left-3 text-[20px] text-on-surface-variant pointer-events-none">mail</span>
                         <input
                             class="w-full pl-10 pr-4 py-2.5 rounded-lg bg-surface-container-low text-on-surface placeholder:text-text-faint-light font-body-sm text-body-sm focus:bg-surface-container-lowest focus:ring-2 focus:ring-brand-500 transition-all outline-none border border-border-light"
-                            id="email" name="email" placeholder="nama@email.com" required type="email">
+                            id="email" name="email" value="{{ old('email') }}" placeholder="nama@email.com" required type="email">
                     </div>
                 </div>
 
@@ -90,7 +105,7 @@
                             class="material-symbols-outlined absolute left-3 text-[20px] text-on-surface-variant pointer-events-none">call</span>
                         <input
                             class="w-full pl-10 pr-4 py-2.5 rounded-lg bg-surface-container-low text-on-surface placeholder:text-text-faint-light font-body-sm text-body-sm focus:bg-surface-container-lowest focus:ring-2 focus:ring-brand-500 transition-all outline-none border border-border-light"
-                            id="phone" name="phone" pattern="[0-9]{10,14}" placeholder="081234567890" required type="tel">
+                            id="phone" name="phone" value="{{ old('phone') }}" pattern="[0-9]{10,14}" placeholder="081234567890" required type="tel">
                     </div>
                 </div>
 
@@ -300,8 +315,10 @@
             }
 
             const btn = document.getElementById('submit-btn');
-            btn.disabled = true;
-            btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[20px]">progress_activity</span><span>Memproses...</span>';
+            setTimeout(() => {
+                btn.disabled = true;
+                btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[20px]">progress_activity</span><span>Memproses...</span>';
+            }, 10);
             return true;
         }
 
