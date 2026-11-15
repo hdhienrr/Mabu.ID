@@ -1,5 +1,4 @@
-<header class="fixed top-0 w-full z-50 backdrop-blur-xl border-b border-border-light transition-colors duration-200"
-    style="background-color: var(--nav-bg);">
+<header class="fixed top-0 w-full z-50 backdrop-blur-xl border-b border-border-light transition-colors duration-200 theme-nav">
     <div class="h-20 max-w-[1200px] mx-auto px-margin flex items-center justify-between gap-space-md">
         <div class="flex items-center gap-space-lg">
             <a class="flex items-center gap-space-xs group" href="{{ url('/') }}">

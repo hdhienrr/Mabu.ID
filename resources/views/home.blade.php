@@ -37,7 +37,7 @@
             </p>
 
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a class="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full font-bold text-sm tracking-wide shadow-xl bg-blue-600 hover:bg-blue-700 text-white transition-all transform hover:scale-105 active:scale-95 duration-200 shadow-blue-600/30" href="#tentang">
+                <a class="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full font-bold text-sm tracking-wide shadow-xl bg-blue-600 hover:bg-blue-700 text-white transition-all transform hover:scale-105 active:scale-95 duration-200 shadow-blue-600/30" href="{{ route('login') }}">
                     <span>MASUK APLIKASI</span>
                     <span class="text-base leading-none">→</span>
                 </a>
@@ -191,7 +191,7 @@
                     <p class="text-sm md:text-base max-w-xl mx-auto mb-8" style="color: var(--text-muted);">
                         Bergabung bersama ribuan mahasiswa, pelajar, dan pencari kerja mandiri yang sudah produktif menghasilkan uang saku sendiri setiap bulan.
                     </p>
-                    <a class="inline-flex items-center gap-2.5 px-8 py-4 rounded-full font-bold text-sm tracking-wide shadow-md hover:scale-105 active:scale-95 transition-all" href="#signup" style="background-color: var(--accent); color: var(--accent-contrast);">
+                    <a class="inline-flex items-center gap-2.5 px-8 py-4 rounded-full font-bold text-sm tracking-wide shadow-md hover:scale-105 active:scale-95 transition-all btn-accent-theme" href="{{ route('register') }}">
                         <span>Daftar Sekarang Secara Gratis →</span>
                     </a>
                 </div>

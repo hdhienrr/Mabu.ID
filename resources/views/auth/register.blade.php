@@ -10,8 +10,7 @@
         </div>
 
         <div
-            class="w-full max-w-[480px] bg-surface-container-lowest rounded-xl shadow-xl p-space-lg sm:p-space-xl flex flex-col gap-space-lg transition-all duration-300 border border-border-light"
-            style="box-shadow: var(--card-shadow);">
+            class="w-full max-w-[480px] auth-card rounded-xl shadow-xl p-space-lg sm:p-space-xl flex flex-col gap-space-lg transition-all duration-300 border border-border-light">
 
             <div class="flex flex-col items-center text-center gap-space-xxs">
                 <div

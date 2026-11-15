@@ -1,0 +1,23 @@
+/* ==========================================================================
+   Auth Layout Specific Styles
+   ========================================================================== */
+
+body.auth-body {
+    background-color: var(--bg-surface);
+    color: var(--text-on-surface);
+    overscroll-behavior: none;
+}
+
+main.auth-main > :first-child {
+    margin-top: 0 !important;
+}
+
+main.auth-main > :last-child {
+    margin-bottom: 0 !important;
+}
+
+.auth-card {
+    background-color: var(--bg-surface-lowest);
+    border-color: var(--color-border);
+    box-shadow: var(--card-shadow);
+}

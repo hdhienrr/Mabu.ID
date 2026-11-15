@@ -18,8 +18,7 @@
                     <span class="font-label-sm text-label-sm text-on-surface">Portal Mahasiswa & Mitra Terverifikasi</span>
                 </div>
 
-                <div class="bg-surface-container-lowest rounded-xl shadow-xl p-space-xl sm:p-space-2xl transition-all border border-border-light"
-                    style="box-shadow: var(--card-shadow);">
+                <div class="auth-card rounded-xl shadow-xl p-space-xl sm:p-space-2xl transition-all border border-border-light">
                     <div class="text-center mb-space-lg">
                         <h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight">Masuk ke Akun MABU</h1>
                         <p class="font-body-sm text-body-sm text-on-surface-variant mt-space-xxs">

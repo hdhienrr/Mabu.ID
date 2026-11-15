@@ -58,19 +58,17 @@
             </button>
 
             @guest
-            <a class="hidden sm:inline-flex items-center justify-center text-xs font-semibold px-4 py-2 rounded-full border transition-all hover:border-blue-600 hover:text-blue-600"
-                href="{{ route('login') }}"
-                style="border-color: var(--border); color: var(--text);">
+            <a class="hidden sm:inline-flex items-center justify-center text-xs font-semibold px-4 py-2 rounded-full border transition-all hover:border-blue-600 hover:text-blue-600 btn-outline-theme"
+                href="{{ route('login') }}">
                 Sign In
             </a>
-            <a class="inline-flex items-center justify-center text-xs font-semibold px-4 sm:px-5 py-2 rounded-full shadow-sm hover:opacity-95 transition-all"
-                href="{{ route('register') }}"
-                style="background-color: var(--accent); color: var(--accent-contrast);">
+            <a class="inline-flex items-center justify-center text-xs font-semibold px-4 sm:px-5 py-2 rounded-full shadow-sm hover:opacity-95 transition-all btn-accent-theme"
+                href="{{ route('register') }}">
                 Sign Up
             </a>
             @else
-            <a class="inline-flex items-center justify-center text-xs font-semibold px-4 sm:px-5 py-2 rounded-full shadow-sm hover:opacity-95 transition-all"
-                href="{{ url('/dashboard') }}" style="background-color: var(--accent); color: var(--accent-contrast);">
+            <a class="inline-flex items-center justify-center text-xs font-semibold px-4 sm:px-5 py-2 rounded-full shadow-sm hover:opacity-95 transition-all btn-accent-theme"
+                href="{{ url('/dashboard') }}">
                 Dashboard
             </a>
             @endguest
