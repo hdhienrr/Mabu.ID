@@ -1,19 +1,24 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
-// Halaman Publik & Autentikasi (Landing Page & Auth)
+// Halaman Publik (Landing Page)
 Route::get('/', function () {
     return view('home');
 })->name('home');
 
-Route::get('/login', function () {
-    return view('auth.login');
-})->name('login');
+// Autentikasi (Guest only)
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
 
-Route::get('/register', function () {
-    return view('auth.register');
-})->name('register');
+    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+    Route::post('/register', [AuthController::class, 'register']);
+});
+
+// Logout
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Halaman Dashboard MABU (7 Halaman Utama)
 Route::prefix('dashboard')->name('mabu.')->group(function () {
