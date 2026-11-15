@@ -42,6 +42,9 @@
 
     @include('partials.auth-footer')
 
+    <!-- Authentication JavaScript -->
+    <script src="{{ asset('js/auth.js') }}" defer></script>
+
     @stack('scripts')
 </body>
 

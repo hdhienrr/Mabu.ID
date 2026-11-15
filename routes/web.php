@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 // Halaman Publik (Landing Page)
@@ -8,20 +8,8 @@ Route::get('/', function () {
     return view('home');
 })->name('home');
 
-// Autentikasi (Guest only)
-Route::middleware('guest')->group(function () {
-    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [AuthController::class, 'login']);
-
-    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-    Route::post('/register', [AuthController::class, 'register']);
-});
-
-// Logout
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-// Halaman Dashboard MABU (7 Halaman Utama)
-Route::prefix('dashboard')->name('mabu.')->group(function () {
+// Dashboard MABU (7 Halaman Utama) - butuh login
+Route::middleware('auth')->prefix('dashboard')->name('mabu.')->group(function () {
     Route::view('/profil', 'mabu.profil')->name('profil');
     Route::view('/lowongan', 'mabu.lowongan')->name('lowongan');
     Route::view('/rekomendasi', 'mabu.rekomendasi')->name('rekomendasi');
@@ -31,5 +19,14 @@ Route::prefix('dashboard')->name('mabu.')->group(function () {
     Route::view('/dokumen', 'mabu.dokumen')->name('dokumen');
 });
 
-// Redirect otomatis jika akses /dashboard langsung ke halaman profil
-Route::redirect('/dashboard', '/dashboard/profil');
+// /dashboard langsung ke halaman profil
+Route::redirect('/dashboard', '/dashboard/profil')->name('dashboard');
+
+// Manajemen akun (Breeze)
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';

@@ -25,7 +25,7 @@
             </div>
 
             <!-- Validation Errors Alert -->
-            @if (isset($errors) && $errors->any())
+            @if ($errors->any())
                 <div class="p-3.5 rounded-xl bg-error/10 border border-error/20 text-error font-body-sm text-body-sm flex items-start gap-2.5">
                     <span class="material-symbols-outlined text-[20px] shrink-0 mt-0.5">error</span>
                     <div class="flex-1">
@@ -45,7 +45,7 @@
                 <div class="grid grid-cols-2 gap-space-xs p-1 bg-surface-container-low rounded-xl border border-border-light">
                     <button
                         class="flex flex-col items-start p-space-sm rounded-lg text-left transition-all duration-200 {{ old('role', 'jobseeker') === 'jobseeker' ? 'bg-surface-container-lowest shadow-sm text-primary border border-border-light' : 'text-on-surface-variant hover:text-on-surface border border-transparent' }} group"
-                        id="role-jobseeker-btn" onclick="setRole('jobseeker')" type="button">
+                        id="role-jobseeker-btn" type="button">
                         <div class="flex items-center justify-between w-full mb-1">
                             <span
                                 class="material-symbols-outlined text-[22px] text-primary group-hover:scale-110 transition-transform">school</span>
@@ -56,7 +56,7 @@
                     </button>
                     <button
                         class="flex flex-col items-start p-space-sm rounded-lg text-left transition-all duration-200 {{ old('role') === 'employer' ? 'bg-surface-container-lowest shadow-sm text-primary border border-border-light' : 'text-on-surface-variant hover:text-on-surface border border-transparent' }} group"
-                        id="role-employer-btn" onclick="setRole('employer')" type="button">
+                        id="role-employer-btn" type="button">
                         <div class="flex items-center justify-between w-full mb-1">
                             <span
                                 class="material-symbols-outlined text-[22px] text-on-surface-variant group-hover:text-primary transition-colors group-hover:scale-110 transition-transform">storefront</span>
@@ -68,8 +68,7 @@
                 </div>
             </div>
 
-            <form class="flex flex-col gap-space-md" method="POST" action="{{ route('register') }}"
-                onsubmit="return validateForm()">
+            <form id="register-form" class="flex flex-col gap-space-md" method="POST" action="{{ route('register') }}">
                 @csrf
                 <input id="selected-role" name="role" type="hidden" value="{{ old('role', 'jobseeker') }}">
 
@@ -116,11 +115,10 @@
                             class="material-symbols-outlined absolute left-3 text-[20px] text-on-surface-variant pointer-events-none">lock</span>
                         <input
                             class="w-full pl-10 pr-11 py-2.5 rounded-lg bg-surface-container-low text-on-surface placeholder:text-text-faint-light font-body-sm text-body-sm focus:bg-surface-container-lowest focus:ring-2 focus:ring-brand-500 transition-all outline-none border border-border-light"
-                            id="password" name="password" oninput="checkPasswordStrength(this.value)"
-                            placeholder="Minimal 8 karakter" required type="password">
+                            id="password" name="password" placeholder="Minimal 8 karakter" required type="password">
                         <button aria-label="Tampilkan atau sembunyikan kata sandi"
                             class="absolute right-3 text-on-surface-variant hover:text-on-surface flex items-center justify-center p-1"
-                            onclick="togglePasswordVisibility('password', 'password-toggle-icon')" type="button">
+                            id="toggle-reg-password" data-toggle="password" data-target="password" data-icon="password-toggle-icon" type="button">
                             <span class="material-symbols-outlined text-[20px]" id="password-toggle-icon">visibility</span>
                         </button>
                     </div>
@@ -146,11 +144,10 @@
                             class="material-symbols-outlined absolute left-3 text-[20px] text-on-surface-variant pointer-events-none">lock_reset</span>
                         <input
                             class="w-full pl-10 pr-11 py-2.5 rounded-lg bg-surface-container-low text-on-surface placeholder:text-text-faint-light font-body-sm text-body-sm focus:bg-surface-container-lowest focus:ring-2 focus:ring-brand-500 transition-all outline-none border border-border-light"
-                            id="password_confirmation" name="password_confirmation" oninput="checkPasswordMatch()"
-                            placeholder="Ulangi kata sandi" required type="password">
+                            id="password_confirmation" name="password_confirmation" placeholder="Ulangi kata sandi" required type="password">
                         <button aria-label="Tampilkan atau sembunyikan konfirmasi kata sandi"
                             class="absolute right-3 text-on-surface-variant hover:text-on-surface flex items-center justify-center p-1"
-                            onclick="togglePasswordVisibility('password_confirmation', 'confirm-toggle-icon')"
+                            id="toggle-confirm-password" data-toggle="password" data-target="password_confirmation" data-icon="confirm-toggle-icon"
                             type="button">
                             <span class="material-symbols-outlined text-[20px]" id="confirm-toggle-icon">visibility</span>
                         </button>
@@ -192,7 +189,7 @@
 
                 <button
                     class="w-full py-2.5 px-space-md rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md shadow-sm hover:shadow transition-all flex items-center justify-center gap-space-xs border border-border-light"
-                    onclick="handleGoogleSignUp()" type="button">
+                    type="button" data-action="google-auth">
                     <svg aria-hidden="true" class="w-5 h-5 shrink-0" viewBox="0 0 24 24">
                         <path
                             d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.65v3h3.86c2.26-2.09 3.68-5.17 3.68-9.09z"
@@ -233,97 +230,3 @@
         </div>
     </div>
 @endsection
-
-@push('scripts')
-    <script>
-        function setRole(role) {
-            const jobseekerBtn = document.getElementById('role-jobseeker-btn');
-            const employerBtn = document.getElementById('role-employer-btn');
-            const selectedRoleInput = document.getElementById('selected-role');
-
-            selectedRoleInput.value = role;
-
-            if (role === 'jobseeker') {
-                jobseekerBtn.className = 'flex flex-col items-start p-space-sm rounded-lg text-left transition-all duration-200 bg-surface-container-lowest shadow-sm text-primary group border border-border-light';
-                employerBtn.className = 'flex flex-col items-start p-space-sm rounded-lg text-left transition-all duration-200 text-on-surface-variant hover:text-on-surface group border border-transparent';
-            } else {
-                employerBtn.className = 'flex flex-col items-start p-space-sm rounded-lg text-left transition-all duration-200 bg-surface-container-lowest shadow-sm text-primary group border border-border-light';
-                jobseekerBtn.className = 'flex flex-col items-start p-space-sm rounded-lg text-left transition-all duration-200 text-on-surface-variant hover:text-on-surface group border border-transparent';
-            }
-        }
-
-        function togglePasswordVisibility(fieldId, iconId) {
-            const field = document.getElementById(fieldId);
-            const icon = document.getElementById(iconId);
-            if (field.type === 'password') {
-                field.type = 'text';
-                icon.textContent = 'visibility_off';
-            } else {
-                field.type = 'password';
-                icon.textContent = 'visibility';
-            }
-        }
-
-        function checkPasswordStrength(val) {
-            const b1 = document.getElementById('bar-1'), b2 = document.getElementById('bar-2'),
-                b3 = document.getElementById('bar-3'), b4 = document.getElementById('bar-4');
-            const label = document.getElementById('strength-label');
-
-            [b1, b2, b3, b4].forEach(b => b.className = 'h-full bg-border-light transition-colors');
-
-            if (!val) {
-                label.textContent = 'Kekuatan sandi';
-                label.className = 'font-body-xs text-body-xs text-text-faint-light';
-                return;
-            }
-
-            let score = 0;
-            if (val.length >= 8) score++;
-            if (/[A-Z]/.test(val)) score++;
-            if (/[0-9]/.test(val)) score++;
-            if (/[^A-Za-z0-9]/.test(val)) score++;
-
-            if (score === 1) {
-                b1.className = 'h-full bg-error transition-colors';
-                label.textContent = 'Lemah'; label.className = 'font-body-xs text-body-xs text-error font-medium';
-            } else if (score === 2) {
-                b1.className = b2.className = 'h-full bg-warning transition-colors';
-                label.textContent = 'Cukup'; label.className = 'font-body-xs text-body-xs text-warning font-medium';
-            } else if (score === 3) {
-                b1.className = b2.className = b3.className = 'h-full bg-info transition-colors';
-                label.textContent = 'Baik'; label.className = 'font-body-xs text-body-xs text-info font-medium';
-            } else if (score >= 4) {
-                [b1, b2, b3, b4].forEach(b => b.className = 'h-full bg-success transition-colors');
-                label.textContent = 'Sangat Kuat'; label.className = 'font-body-xs text-body-xs text-success font-medium';
-            }
-        }
-
-        function checkPasswordMatch() {
-            const pwd = document.getElementById('password').value;
-            const confirm = document.getElementById('password_confirmation').value;
-            const errorEl = document.getElementById('match-error');
-            if (confirm && pwd !== confirm) errorEl.classList.remove('hidden');
-            else errorEl.classList.add('hidden');
-        }
-
-        function validateForm() {
-            const pwd = document.getElementById('password').value;
-            const confirm = document.getElementById('password_confirmation').value;
-            if (pwd !== confirm) {
-                document.getElementById('match-error').classList.remove('hidden');
-                return false;
-            }
-
-            const btn = document.getElementById('submit-btn');
-            setTimeout(() => {
-                btn.disabled = true;
-                btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[20px]">progress_activity</span><span>Memproses...</span>';
-            }, 10);
-            return true;
-        }
-
-        function handleGoogleSignUp() {
-            alert('Membuka autentikasi Google untuk pendaftaran akun MABU...');
-        }
-    </script>
-@endpush

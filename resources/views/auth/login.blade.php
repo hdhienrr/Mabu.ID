@@ -27,7 +27,7 @@
                     </div>
 
                     <!-- Flash and Error Alerts -->
-                    @if (isset($errors) && $errors->any())
+                    @if ($errors->any())
                         <div class="mb-space-md p-3.5 rounded-xl bg-error/10 border border-error/20 text-error font-body-sm text-body-sm flex items-start gap-2.5">
                             <span class="material-symbols-outlined text-[20px] shrink-0 mt-0.5">error</span>
                             <div class="flex-1">
@@ -105,7 +105,7 @@
                                 <span class="font-body-sm text-body-sm text-on-surface-variant">Ingat saya</span>
                             </label>
                             <a class="font-label-sm text-label-sm text-primary hover:underline transition-colors"
-                                href="#">Lupa kata sandi?</a>
+                                href="{{ route('password.request') }}">Lupa kata sandi?</a>
                         </div>
 
                         <button
@@ -125,7 +125,7 @@
 
                     <button
                         class="w-full py-2.5 px-space-md rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md transition-all flex items-center justify-center gap-3 shadow-sm active:scale-[0.99] border border-border-light"
-                        type="button">
+                        type="button" data-action="google-auth">
                         <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
                             <path
                                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -163,38 +163,3 @@
         </div>
     </div>
 @endsection
-
-@push('scripts')
-    <script>
-        (function () {
-            const toggleBtn = document.getElementById('toggle-password');
-            const passwordInput = document.getElementById('password');
-            const passwordIcon = document.getElementById('password-icon');
-
-            if (toggleBtn && passwordInput && passwordIcon) {
-                toggleBtn.addEventListener('click', function () {
-                    const isPassword = passwordInput.getAttribute('type') === 'password';
-                    passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
-                    passwordIcon.textContent = isPassword ? 'visibility_off' : 'visibility';
-                });
-            }
-
-            const roleStudent = document.getElementById('role-student');
-            const rolePartner = document.getElementById('role-partner');
-            const loginRoleInput = document.getElementById('login-role');
-
-            function setActiveRole(active, inactive, roleValue) {
-                active.classList.add('bg-surface-container-lowest', 'text-primary', 'shadow-sm', 'border-border-light');
-                active.classList.remove('text-on-surface-variant', 'border-transparent');
-                inactive.classList.remove('bg-surface-container-lowest', 'text-primary', 'shadow-sm', 'border-border-light');
-                inactive.classList.add('text-on-surface-variant', 'border-transparent');
-                if (loginRoleInput) loginRoleInput.value = roleValue;
-            }
-
-            if (roleStudent && rolePartner) {
-                roleStudent.addEventListener('click', function () { setActiveRole(roleStudent, rolePartner, 'student'); });
-                rolePartner.addEventListener('click', function () { setActiveRole(rolePartner, roleStudent, 'partner'); });
-            }
-        })();
-    </script>
-@endpush
