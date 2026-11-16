@@ -148,15 +148,6 @@
                                id="universityMajor" name="universityMajor" type="text" value="Institut Teknologi Sepuluh Nopember - Teknik Informatika"/>
                     </div>
                 </div>
-
-                <div class="space-y-1.5">
-                    <label class="block text-xs font-bold text-ink" for="currentRole">Status &amp; Preferensi Pekerjaan</label>
-                    <div class="relative flex items-center">
-                        <span class="absolute left-3.5 material-symbols-outlined text-[18px] text-muted">work_outline</span>
-                        <input class="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-primary rounded-xl py-2.5 pl-10 pr-4 text-ink text-xs transition outline-none"
-                               id="currentRole" name="currentRole" type="text" value="Mahasiswa Aktif &amp; Pencari Kerja Part-Time"/>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -251,15 +242,11 @@
                 <span>Pastikan data kontak &amp; bidang minat sesuai agar rekomendasi lowongan akurat.</span>
             </div>
 
-            <div class="flex items-center gap-3 w-full sm:w-auto justify-end">
-                <button class="px-5 py-2.5 rounded-full bg-slate-100 hover:bg-slate-200 text-ink font-semibold text-xs transition"
-                        onclick="window.history.back()" type="button">
-                    Batal
-                </button>
-                <button class="px-7 py-2.5 rounded-full bg-primary text-white hover:bg-blue-700 transition font-semibold text-xs shadow-xs flex items-center gap-1.5" type="submit">
-                    <span class="material-symbols-outlined text-[17px]">save</span>
-                    <span>Simpan Perubahan</span>
-                </button>
+            <div class="flex items-center w-full sm:w-auto justify-end">
+                <a href="{{ route('mabu.profil.data-diri') }}" class="px-7 py-2.5 rounded-full bg-primary text-white hover:bg-blue-700 transition font-semibold text-xs shadow-xs flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-[17px]">person_edit</span>
+                    <span>Edit Data Diri</span>
+                </a>
             </div>
         </div>
     </form>
