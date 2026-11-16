@@ -8,21 +8,24 @@ Route::get('/', function () {
     return view('home');
 })->name('home');
 
-// Dashboard MABU (7 Halaman Utama) - butuh login
+// Dashboard MABU - butuh login
 Route::middleware('auth')->prefix('dashboard')->name('mabu.')->group(function () {
+    Route::view('/dashboard', 'mabu.dashboard')->name('dashboard');
+    Route::view('/jadwal', 'mabu.jadwal')->name('jadwal');
     Route::view('/profil', 'mabu.profil')->name('profil');
     Route::view('/profil/data-diri', 'mabu.profil.data-diri')->name('profil.data-diri');
     Route::view('/profil/pengalaman', 'mabu.profil.pengalaman')->name('profil.pengalaman');
-    Route::view('/lowongan', 'mabu.lowongan')->name('lowongan');
-    Route::view('/rekomendasi', 'mabu.rekomendasi')->name('rekomendasi');
-    Route::view('/jadwal', 'mabu.jadwal')->name('jadwal');
-    Route::view('/lamaran', 'mabu.lamaran')->name('lamaran');
-    Route::view('/cv', 'mabu.cv')->name('cv');
-    Route::view('/dokumen', 'mabu.dokumen')->name('dokumen');
+
+    // Redirect sementara untuk route yang file view-nya sudah dihapus
+    Route::redirect('/lowongan', '/dashboard/dashboard')->name('lowongan');
+    Route::redirect('/rekomendasi', '/dashboard/dashboard')->name('rekomendasi');
+    Route::redirect('/lamaran', '/dashboard/dashboard')->name('lamaran');
+    Route::redirect('/cv', '/dashboard/dashboard')->name('cv');
+    Route::redirect('/dokumen', '/dashboard/dashboard')->name('dokumen');
 });
 
-// /dashboard langsung ke halaman profil
-Route::redirect('/dashboard', '/dashboard/profil')->name('dashboard');
+// Setelah login, /dashboard langsung masuk ke Main Page
+Route::redirect('/dashboard', '/dashboard/dashboard')->name('dashboard');
 
 // Manajemen akun (Breeze)
 Route::middleware('auth')->group(function () {

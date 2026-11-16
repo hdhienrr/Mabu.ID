@@ -1,266 +1,363 @@
 @extends('layouts.mabu')
 
-@section('title', 'Dashboard Profil - MABU')
+@section('title', 'Edit Profil Pengguna - MABU')
 
 @section('content')
-@php
-    // Data fallback otomatis supaya langsung jalan tanpa error meskipun belum dihubungkan ke database
-    $authUser = auth()->user();
-    $namaUser = $user['name'] ?? ($authUser->name ?? 'Andika Candra');
-    $inisial = collect(explode(' ', $namaUser))->map(fn($n) => strtoupper(substr($n, 0, 1)))->take(2)->join('');
-    $kampus = $user['campus'] ?? 'Institut Teknologi Sepuluh Nopember (ITS), Surabaya';
-    $jurusan = $user['major'] ?? 'Mahasiswa Teknik Informatika';
-    $kelengkapan = $user['profile_completion'] ?? 80;
-    $keahlian = $user['skills'] ?? ['Barista & F&B', 'Kasir & Point of Sales', 'Admin Marketplace', 'Tutor Matematika'];
-@endphp
+<div class="max-w-6xl mx-auto space-y-6">
 
-<div class="space-y-space-lg">
-    <!-- BARIS 1: HERO SAMBUTAN & PROGRESS PROFIL -->
-    <section class="bg-gradient-to-br from-primary via-primary-container to-surface-tint rounded-3xl p-6 sm:p-8 text-on-primary shadow-lg shadow-primary/20 relative overflow-hidden">
-        <div class="absolute -right-10 -bottom-10 w-72 h-72 rounded-full bg-white/10 blur-2xl pointer-events-none"></div>
-        <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-            <div class="space-y-3 max-w-2xl">
-                <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center font-headline-sm font-bold text-lg text-on-primary shrink-0">
-                        {{ $inisial }}
+    <!-- Header Atas Profil + Tab Navigasi ke Halaman Dwiky -->
+    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="space-y-0.5">
+                <div class="flex items-center gap-1.5 text-muted text-xs font-medium">
+                    <a class="hover:text-primary transition-colors" href="{{ route('mabu.dashboard') }}">Main Page</a>
+                    <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                    <span class="text-ink font-semibold">Profil Pengguna</span>
+                </div>
+                <h1 class="font-heading text-2xl font-extrabold text-ink tracking-tight">Edit Profil Pengguna</h1>
+            </div>
+
+            <div class="flex items-center gap-2.5 self-start sm:self-auto">
+                <div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200">
+                    <div class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></div>
+                    <span class="text-xs text-emerald-800 font-semibold">Profil 85% Lengkap</span>
+                </div>
+                <a href="{{ route('mabu.jadwal') }}"
+                   class="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-full bg-primary-light text-primary hover:bg-blue-100 transition-colors text-xs font-semibold">
+                    <span>Atur Jadwal Kuliah</span>
+                    <span class="material-symbols-outlined text-[16px]">calendar_today</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Tab Sub-menu Profil -->
+        <div class="flex flex-wrap items-center gap-2 pt-3 border-t border-slate-100">
+            <a href="{{ route('mabu.profil') }}"
+               class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-primary text-white shadow-2xs">
+                Ringkasan &amp; Akun
+            </a>
+            <a href="{{ route('mabu.profil.data-diri') }}"
+               class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-50 border border-slate-200 text-ink hover:bg-primary-light hover:text-primary transition">
+                Data Diri Lengkap
+            </a>
+            <a href="{{ route('mabu.profil.pengalaman') }}"
+               class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-50 border border-slate-200 text-ink hover:bg-primary-light hover:text-primary transition">
+                Pengalaman &amp; Keahlian
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Form Grid Layout -->
+    <form class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start" id="profileForm" onsubmit="event.preventDefault(); showSaveToast();">
+
+        <!-- KOLOM KIRI (7/12) -->
+        <div class="lg:col-span-7 flex flex-col gap-6">
+
+            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+                <div class="relative h-36 w-full bg-gradient-to-r from-primary via-primary-container to-blue-400 flex items-end justify-end p-4 overflow-hidden">
+                    <div class="absolute -top-10 -right-10 w-44 h-44 rounded-full bg-white/10 blur-xl"></div>
+                    <div class="absolute -bottom-8 left-16 w-32 h-32 rounded-full bg-emerald-300/20 blur-lg"></div>
+                    <button class="relative z-10 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 text-ink hover:bg-white text-xs font-semibold shadow-xs backdrop-blur-md transition active:scale-95" type="button">
+                        <span class="material-symbols-outlined text-[16px] text-primary">edit</span>
+                        <span>Ganti Sampul</span>
+                    </button>
+                </div>
+
+                <div class="px-6 pb-6 pt-0">
+                    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 -mt-12 mb-4">
+                        <div class="relative inline-block self-start">
+                            <div class="w-24 h-24 rounded-2xl bg-primary-light text-primary font-heading font-extrabold text-2xl flex items-center justify-center overflow-hidden shadow-md ring-4 ring-white" id="avatarPreviewBox">
+                                AC
+                            </div>
+                            <button aria-label="Ganti foto profil" onclick="document.getElementById('avatarFileInput').click()"
+                                    class="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center shadow-md hover:scale-105 transition" type="button">
+                                <span class="material-symbols-outlined text-[16px]">photo_camera</span>
+                            </button>
+                        </div>
+
+                        <div class="flex items-center gap-2 pt-2">
+                            <button class="px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-ink font-semibold text-xs transition"
+                                    onclick="document.getElementById('avatarFileInput').click()" type="button">
+                                Unggah Foto Baru
+                            </button>
+                            <input accept="image/*" class="hidden" id="avatarFileInput" type="file" onchange="previewAvatar(event)"/>
+                            <button class="px-5 py-2 rounded-full bg-primary text-white hover:bg-blue-700 transition font-semibold text-xs shadow-xs"
+                                    onclick="showSaveToast('Foto profil tersimpan')" type="button">
+                                Simpan
+                            </button>
+                        </div>
                     </div>
+
                     <div>
-                        <h2 class="font-headline-lg font-bold text-2xl sm:text-3xl tracking-tight flex items-center gap-2">
-                            Halo, {{ explode(' ', $namaUser)[0] }}! <span>👋</span>
-                        </h2>
-                        <p class="text-on-primary-container text-xs sm:text-sm font-medium">{{ $jurusan }} • {{ $kampus }}</p>
+                        <h2 class="font-heading text-base text-ink font-bold">Foto Profil Kamu</h2>
+                        <p class="text-xs text-muted mt-0.5">
+                            Foto ini akan ditampilkan pada kartu pelamar kerja dan portofolio resmi MABU. Format JPG/PNG maks. 2MB.
+                        </p>
                     </div>
                 </div>
-                <p class="text-on-primary-container/90 text-sm leading-relaxed">
-                    Profilmu sudah <span class="font-bold text-on-primary">{{ $kelengkapan }}% lengkap</span>. Lengkapi jadwal kuliah dan keahlianmu agar sistem cerdas MABU dapat otomatis merekomendasikan lowongan part-time di sekitarmu tanpa bentrok waktu!
-                </p>
+            </div>
 
-                <!-- Tags Keahlian -->
-                <div class="flex flex-wrap items-center gap-1.5 pt-1">
-                    <span class="text-xs text-on-primary-container font-medium mr-1">Keahlianmu:</span>
-                    @foreach($keahlian as $skill)
-                        <span class="bg-white/15 backdrop-blur-sm border border-white/20 text-on-primary text-[11px] font-medium px-2.5 py-0.5 rounded-full">{{ $skill }}</span>
+            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-6 flex flex-col gap-4">
+                <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                    <div>
+                        <h2 class="font-heading text-base text-ink font-bold">Informasi Pribadi</h2>
+                        <p class="text-xs text-muted">Lengkapi data diri akademik dan kontak untuk mempermudah verifikasi mitra usaha.</p>
+                    </div>
+                    <span class="w-9 h-9 rounded-full bg-primary-light flex items-center justify-center text-primary">
+                        <span class="material-symbols-outlined text-[18px]">badge</span>
+                    </span>
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-ink" for="fullName">Nama Lengkap</label>
+                    <div class="relative flex items-center">
+                        <span class="absolute left-3.5 material-symbols-outlined text-[18px] text-muted">person</span>
+                        <input class="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-primary rounded-xl py-2.5 pl-10 pr-4 text-ink text-xs transition outline-none"
+                               id="fullName" name="fullName" type="text" value="Andika Candra"/>
+                    </div>
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-ink" for="emailAddress">Alamat Email Kampus / Aktif</label>
+                    <div class="relative flex items-center">
+                        <span class="absolute left-3.5 material-symbols-outlined text-[18px] text-muted">mail</span>
+                        <input class="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-primary rounded-xl py-2.5 pl-10 pr-4 text-ink text-xs transition outline-none"
+                               id="emailAddress" name="emailAddress" type="email" value="andika.candra@student.its.ac.id"/>
+                    </div>
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-ink" for="phoneNumber">Nomor WhatsApp Aktif</label>
+                    <div class="relative flex items-center">
+                        <div class="absolute left-3.5 flex items-center gap-1.5 pointer-events-none">
+                            <span class="w-4 h-3 bg-red-600 rounded-[1px] relative overflow-hidden inline-block border border-slate-200">
+                                <span class="absolute bottom-0 inset-x-0 h-1/2 bg-white"></span>
+                            </span>
+                            <span class="text-xs text-ink font-semibold">+62</span>
+                        </div>
+                        <input class="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-primary rounded-xl py-2.5 pl-16 pr-4 text-ink text-xs transition outline-none"
+                               id="phoneNumber" name="phoneNumber" type="tel" value="812-3456-7890"/>
+                    </div>
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-ink" for="universityMajor">Universitas &amp; Jurusan</label>
+                    <div class="relative flex items-center">
+                        <span class="absolute left-3.5 material-symbols-outlined text-[18px] text-muted">account_balance</span>
+                        <input class="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-primary rounded-xl py-2.5 pl-10 pr-4 text-ink text-xs transition outline-none"
+                               id="universityMajor" name="universityMajor" type="text" value="Institut Teknologi Sepuluh Nopember - Teknik Informatika"/>
+                    </div>
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-ink" for="currentRole">Status &amp; Preferensi Pekerjaan</label>
+                    <div class="relative flex items-center">
+                        <span class="absolute left-3.5 material-symbols-outlined text-[18px] text-muted">work_outline</span>
+                        <input class="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-primary rounded-xl py-2.5 pl-10 pr-4 text-ink text-xs transition outline-none"
+                               id="currentRole" name="currentRole" type="text" value="Mahasiswa Aktif &amp; Pencari Kerja Part-Time"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KOLOM KANAN (5/12) -->
+        <div class="lg:col-span-5 flex flex-col gap-6">
+
+            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-6 flex flex-col gap-4">
+                <div>
+                    <h2 class="font-heading text-base text-ink font-bold">Bidang yang Diminati</h2>
+                    <p class="text-xs text-muted mt-1 leading-snug">
+                        Pilih bidang minat pekerjaan part-time agar rekomendasi lowongan di Main Page semakin akurat.
+                    </p>
+                </div>
+
+                <div class="flex flex-wrap gap-2" id="interestsContainer">
+                    @foreach(['Barista & F&B', 'Desain Grafis & UI', 'Kasir & Retail', 'Admin & Data Entry', 'Event Staff & Crew', 'Tutor / Pengajar'] as $minat)
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary-light text-primary text-xs font-semibold">
+                        <span>{{ $minat }}</span>
+                        <button aria-label="Hapus {{ $minat }}" class="hover:text-red-600 transition-colors flex items-center justify-center" onclick="this.parentElement.remove()" type="button">
+                            <span class="material-symbols-outlined text-[15px]">close</span>
+                        </button>
+                    </span>
                     @endforeach
-                    <button type="button" onclick="document.getElementById('modalEditProfil').classList.remove('hidden')" class="text-xs text-on-primary underline font-semibold hover:opacity-80 ml-2">
-                        + Tambah
+                </div>
+
+                <div class="pt-1">
+                    <div class="hidden flex items-center gap-2 mb-2" id="addInterestInputWrapper">
+                        <input class="flex-1 bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-ink text-xs outline-none focus:border-primary"
+                               id="newInterestInput" placeholder="Ketik keahlian / minat..." type="text"/>
+                        <button class="px-3.5 py-2 rounded-xl bg-primary text-white text-xs font-semibold" onclick="addNewInterest()" type="button">Tambah</button>
+                        <button class="p-1.5 text-muted hover:text-ink" onclick="toggleAddInterest(false)" type="button">
+                            <span class="material-symbols-outlined text-[18px]">close</span>
+                        </button>
+                    </div>
+                    <button class="w-full py-2.5 rounded-xl bg-slate-50 hover:bg-primary-light text-primary text-xs font-semibold flex items-center justify-center gap-1.5 border border-slate-200/80 transition"
+                            id="openAddInterestBtn" onclick="toggleAddInterest(true)" type="button">
+                        <span class="material-symbols-outlined text-[18px]">add_circle</span>
+                        <span>Tambah Bidang Minat</span>
                     </button>
                 </div>
             </div>
 
-            <!-- Profil Completion Widget -->
-            <div class="bg-white/15 backdrop-blur-md border border-white/20 rounded-2xl p-5 lg:w-80 shrink-0 space-y-4">
+            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-6 flex flex-col gap-4">
                 <div class="flex items-center justify-between">
-                    <span class="text-xs font-semibold text-on-primary-container uppercase tracking-wider">Kelengkapan Profil</span>
-                    <span class="font-headline-md font-bold text-xl text-on-primary">{{ $kelengkapan }}%</span>
+                    <div>
+                        <h2 class="font-heading text-base text-ink font-bold">Akun Media Sosial &amp; Tautan</h2>
+                        <p class="text-xs text-muted mt-0.5">Tautkan portofolio atau akun profesionalmu.</p>
+                    </div>
+                    <span class="w-8 h-8 rounded-full bg-primary-light flex items-center justify-center text-primary">
+                        <span class="material-symbols-outlined text-[18px]">link</span>
+                    </span>
                 </div>
-                <div class="w-full bg-black/20 rounded-full h-2.5 overflow-hidden">
-                    <div class="bg-on-primary h-2.5 rounded-full transition-all duration-700" style="width: {{ $kelengkapan }}%"></div>
+
+                <div class="flex flex-col gap-2.5" id="socialLinksContainer">
+                    <div class="relative flex items-center">
+                        <div class="absolute left-3 w-6 h-6 rounded-md bg-primary-light flex items-center justify-center text-primary">
+                            <span class="text-[11px] font-bold">in</span>
+                        </div>
+                        <input class="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-primary rounded-xl py-2.5 pl-11 pr-4 text-ink text-xs outline-none"
+                               name="linkedinUrl" type="text" value="https://linkedin.com/in/andikacandra"/>
+                    </div>
+
+                    <div class="relative flex items-center">
+                        <div class="absolute left-3 w-6 h-6 rounded-md bg-primary-light flex items-center justify-center text-primary">
+                            <span class="material-symbols-outlined text-[15px]">photo_camera</span>
+                        </div>
+                        <input class="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-primary rounded-xl py-2.5 pl-11 pr-4 text-ink text-xs outline-none"
+                               name="instagramUrl" type="text" value="https://instagram.com/andika.candra"/>
+                    </div>
+
+                    <div class="relative flex items-center">
+                        <div class="absolute left-3 w-6 h-6 rounded-md bg-primary-light flex items-center justify-center text-primary">
+                            <span class="material-symbols-outlined text-[15px]">code</span>
+                        </div>
+                        <input class="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-primary rounded-xl py-2.5 pl-11 pr-4 text-ink text-xs outline-none"
+                               name="portfolioUrl" type="text" value="https://github.com/andikacandra"/>
+                    </div>
                 </div>
-                <button type="button" onclick="document.getElementById('modalEditProfil').classList.remove('hidden')" class="w-full bg-surface-container-lowest text-primary hover:bg-primary-fixed font-label-lg font-semibold text-xs sm:text-sm py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 shadow-sm transition-all">
-                    <span class="material-symbols-outlined text-[18px]">edit</span>
-                    <span>Lengkapi Profil Sekarang</span>
+
+                <button class="w-full py-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-ink text-xs font-semibold flex items-center justify-center gap-1.5 border border-slate-200/80 transition"
+                        onclick="addCustomSocialLink()" type="button">
+                    <span class="material-symbols-outlined text-[18px]">add</span>
+                    <span>Tambah Tautan Lain</span>
                 </button>
             </div>
         </div>
-    </section>
 
-    <!-- BARIS 2: STATISTIK STATUS PEKERJAAN -->
-    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="bg-surface-container-lowest p-5 rounded-2xl border border-outline-variant/40 shadow-xs hover:shadow-md transition-shadow">
-            <div class="flex items-center justify-between mb-3">
-                <span class="font-label-md text-on-surface-variant uppercase tracking-wide">Lamaran Aktif</span>
-                <div class="w-9 h-9 rounded-xl bg-primary-fixed text-primary flex items-center justify-center">
-                    <span class="material-symbols-outlined text-[20px]">send</span>
-                </div>
-            </div>
-            <div class="flex items-baseline gap-2">
-                <span class="font-headline-lg font-bold text-2xl sm:text-3xl text-on-surface">{{ $stats['active_applications'] ?? 3 }}</span>
-                <span class="font-body-sm text-on-surface-variant">Lowongan diajukan</span>
-            </div>
-        </div>
-
-        <div class="bg-surface-container-lowest p-5 rounded-2xl border border-outline-variant/40 shadow-xs hover:shadow-md transition-shadow">
-            <div class="flex items-center justify-between mb-3">
-                <span class="font-label-md text-on-surface-variant uppercase tracking-wide">Diterima / Berjalan</span>
-                <div class="w-9 h-9 rounded-xl bg-tertiary-fixed text-on-tertiary-fixed-variant flex items-center justify-center">
-                    <span class="material-symbols-outlined text-[20px]">check_circle</span>
-                </div>
-            </div>
-            <div class="flex items-baseline gap-2">
-                <span class="font-headline-lg font-bold text-2xl sm:text-3xl text-tertiary">{{ $stats['accepted_jobs'] ?? 1 }}</span>
-                <span class="font-body-sm text-on-surface-variant">Kontrak aktif</span>
-            </div>
-        </div>
-
-        <div class="bg-surface-container-lowest p-5 rounded-2xl border border-outline-variant/40 shadow-xs hover:shadow-md transition-shadow">
-            <div class="flex items-center justify-between mb-3">
-                <span class="font-label-md text-on-surface-variant uppercase tracking-wide">Pekerjaan Selesai</span>
-                <div class="w-9 h-9 rounded-xl bg-primary-fixed text-primary flex items-center justify-center">
-                    <span class="material-symbols-outlined text-[20px]">workspace_premium</span>
-                </div>
-            </div>
-            <div class="flex items-baseline gap-2">
-                <span class="font-headline-lg font-bold text-2xl sm:text-3xl text-on-surface">{{ $stats['completed_jobs'] ?? 12 }}</span>
-                <span class="font-body-sm text-on-surface-variant">Proyek / Shift</span>
-            </div>
-        </div>
-
-        <!-- Jadwal Terdekat -->
-        <div class="bg-surface-container-lowest p-5 rounded-2xl border-2 border-primary shadow-sm relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-2 h-full bg-primary"></div>
-            <div class="flex items-center justify-between mb-2">
-                <span class="font-label-md font-bold text-primary uppercase tracking-wide flex items-center gap-1.5">
-                    <span class="material-symbols-outlined text-[18px]">alarm</span>
-                    <span>Jadwal Terdekat</span>
-                </span>
-                <span class="bg-primary-fixed text-on-primary-fixed-variant font-label-sm px-2 py-0.5 rounded-full">HARI INI</span>
-            </div>
-            <h4 class="font-headline-sm text-on-surface">{{ $upcomingShift['title'] ?? 'Shift Barista' }}</h4>
-            <p class="font-body-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
-                <span class="material-symbols-outlined text-[16px]">location_on</span>
-                <span>{{ $upcomingShift['location'] ?? 'Kopi Kenangan, Surabaya' }}</span>
-            </p>
-            <div class="mt-3 bg-surface-container-low text-on-primary-fixed-variant font-label-md py-1.5 px-3 rounded-lg flex items-center justify-between">
-                <span>{{ $upcomingShift['time'] ?? 'Pukul 16:00 - 20:00 WIB' }}</span>
-                <span class="text-[11px] text-primary font-semibold">{{ $upcomingShift['countdown'] ?? 'Mulai dlm 2 jam' }}</span>
-            </div>
-        </div>
-    </section>
-
-    <!-- BARIS 3: RINGKASAN BIODATA & QUICK ACCESS MENU -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <!-- Kartu Informasi Akademik & Preferensi Kerja (7/12) -->
-        <section class="lg:col-span-7 bg-surface-container-lowest rounded-3xl border border-outline-variant/40 p-5 sm:p-6 shadow-xs space-y-5">
-            <div class="flex items-center justify-between border-b border-outline-variant/30 pb-4">
-                <div>
-                    <h3 class="font-headline-sm text-on-surface">Informasi Mahasiswa & Preferensi</h3>
-                    <p class="font-body-sm text-on-surface-variant">Data ini digunakan untuk pencocokan lowongan & generate CV otomatis</p>
-                </div>
-                <button type="button" onclick="document.getElementById('modalEditProfil').classList.remove('hidden')" class="font-label-md text-primary bg-primary-fixed/60 hover:bg-primary-fixed px-3 py-1.5 rounded-xl flex items-center gap-1.5 transition-colors">
-                    <span class="material-symbols-outlined text-[16px]">edit</span>
-                    <span>Edit Data</span>
-                </button>
+        <!-- ACTION BAR BAWAH -->
+        <div class="lg:col-span-12 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+            <div class="flex items-center gap-2 text-muted text-xs">
+                <span class="material-symbols-outlined text-[18px] text-emerald-600">check_circle</span>
+                <span>Pastikan data kontak &amp; bidang minat sesuai agar rekomendasi lowongan akurat.</span>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                <div class="p-3.5 rounded-2xl bg-surface-container-low border border-outline-variant/20">
-                    <span class="font-label-sm text-on-surface-variant uppercase block">Nama Lengkap</span>
-                    <span class="font-label-lg text-on-surface mt-0.5 block">{{ $namaUser }}</span>
-                </div>
-                <div class="p-3.5 rounded-2xl bg-surface-container-low border border-outline-variant/20">
-                    <span class="font-label-sm text-on-surface-variant uppercase block">Email & Kontak</span>
-                    <span class="font-label-lg text-on-surface mt-0.5 block">{{ $authUser->email ?? 'andika.candra@mhs.its.ac.id' }}</span>
-                </div>
-                <div class="p-3.5 rounded-2xl bg-surface-container-low border border-outline-variant/20">
-                    <span class="font-label-sm text-on-surface-variant uppercase block">Kampus / Instansi</span>
-                    <span class="font-label-lg text-on-surface mt-0.5 block">{{ $kampus }}</span>
-                </div>
-                <div class="p-3.5 rounded-2xl bg-surface-container-low border border-outline-variant/20">
-                    <span class="font-label-sm text-on-surface-variant uppercase block">Radius Lokasi Kerja</span>
-                    <span class="font-label-lg text-primary mt-0.5 block">Maksimal 3 km dari Kampus</span>
-                </div>
-            </div>
-
-            <div class="p-4 rounded-2xl bg-surface-container-low border border-outline-variant/20 text-xs">
-                <span class="font-label-sm text-on-surface-variant uppercase block mb-1">Ringkasan Pengalaman Kerja</span>
-                <p class="font-body-md text-on-surface leading-relaxed">{{ $user['experience'] ?? 'Barista paruh waktu selama 6 bulan di Warkop Mbois Manyar. Terbiasa menggunakan sistem POS Moka, ramah pelanggan, dan teliti dalam pembukuan kas harian.' }}</p>
-            </div>
-        </section>
-
-        <!-- Pintasan Fitur Dashboard (5/12) -->
-        <section class="lg:col-span-5 bg-surface-container-lowest rounded-3xl border border-outline-variant/40 p-5 sm:p-6 shadow-xs space-y-4">
-            <div>
-                <h3 class="font-headline-sm text-on-surface">Akses Cepat Menu</h3>
-                <p class="font-body-sm text-on-surface-variant">Lanjutkan aktivitas pencarian kerja part-time kamu</p>
-            </div>
-
-            <div class="space-y-2.5">
-                <a href="{{ route('mabu.rekomendasi') }}" class="flex items-center justify-between p-3.5 rounded-2xl border border-outline-variant/40 hover:border-primary hover:bg-surface-container-low transition-all group">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
-                            <span class="material-symbols-outlined text-[22px]">auto_awesome</span>
-                        </div>
-                        <div>
-                            <h4 class="font-label-lg text-on-surface group-hover:text-primary">Cek Rekomendasi Lowongan</h4>
-                            <p class="font-body-sm text-on-surface-variant">4 lowongan cocok 95%+ dengan jadwalmu</p>
-                        </div>
-                    </div>
-                    <span class="material-symbols-outlined text-[20px] text-on-surface-variant group-hover:text-primary">chevron_right</span>
-                </a>
-
-                <a href="{{ route('mabu.jadwal') }}" class="flex items-center justify-between p-3.5 rounded-2xl border border-outline-variant/40 hover:border-primary hover:bg-surface-container-low transition-all group">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-primary-fixed text-primary flex items-center justify-center shrink-0">
-                            <span class="material-symbols-outlined text-[22px]">calendar_month</span>
-                        </div>
-                        <div>
-                            <h4 class="font-label-lg text-on-surface group-hover:text-primary">Atur Jadwal Kuliah</h4>
-                            <p class="font-body-sm text-on-surface-variant">Update jam kosong agar tidak bentrok shift</p>
-                        </div>
-                    </div>
-                    <span class="material-symbols-outlined text-[20px] text-on-surface-variant group-hover:text-primary">chevron_right</span>
-                </a>
-
-                <a href="{{ route('mabu.cv') }}" class="flex items-center justify-between p-3.5 rounded-2xl border border-outline-variant/40 hover:border-primary hover:bg-surface-container-low transition-all group">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-tertiary-fixed text-on-tertiary-fixed-variant flex items-center justify-center shrink-0">
-                            <span class="material-symbols-outlined text-[22px]">description</span>
-                        </div>
-                        <div>
-                            <h4 class="font-label-lg text-on-surface group-hover:text-primary">Generate CV Otomatis</h4>
-                            <p class="font-body-sm text-on-surface-variant">Unduh CV siap lamar format PDF</p>
-                        </div>
-                    </div>
-                    <span class="material-symbols-outlined text-[20px] text-on-surface-variant group-hover:text-primary">chevron_right</span>
-                </a>
-            </div>
-        </section>
-    </div>
-</div>
-
-<!-- MODAL EDIT PROFIL -->
-<div id="modalEditProfil" class="fixed inset-0 z-50 bg-on-surface/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
-    <div class="bg-surface-container-lowest rounded-3xl max-w-lg w-full p-6 shadow-xl border border-outline-variant/30 space-y-5">
-        <div class="flex items-center justify-between border-b border-outline-variant/30 pb-3">
-            <h3 class="font-headline-sm text-on-surface">Edit Profil Mahasiswa</h3>
-            <button type="button" onclick="document.getElementById('modalEditProfil').classList.add('hidden')" class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container">
-                <span class="material-symbols-outlined text-[20px]">close</span>
-            </button>
-        </div>
-
-        <form action="#" method="POST" class="space-y-4">
-            @csrf
-            <div>
-                <label class="font-label-md text-on-surface block mb-1">Nama Lengkap</label>
-                <input type="text" name="name" value="{{ $namaUser }}" class="w-full rounded-xl border border-outline-variant bg-surface px-3.5 py-2 font-body-md text-on-surface focus:outline-none focus:border-primary">
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                    <label class="font-label-md text-on-surface block mb-1">Kampus</label>
-                    <input type="text" name="campus" value="{{ $kampus }}" class="w-full rounded-xl border border-outline-variant bg-surface px-3.5 py-2 font-body-md text-on-surface focus:outline-none focus:border-primary">
-                </div>
-                <div>
-                    <label class="font-label-md text-on-surface block mb-1">Jurusan</label>
-                    <input type="text" name="major" value="{{ $jurusan }}" class="w-full rounded-xl border border-outline-variant bg-surface px-3.5 py-2 font-body-md text-on-surface focus:outline-none focus:border-primary">
-                </div>
-            </div>
-            <div>
-                <label class="font-label-md text-on-surface block mb-1">Keahlian (pisahkan dengan koma)</label>
-                <input type="text" name="skills" value="{{ implode(', ', $keahlian) }}" class="w-full rounded-xl border border-outline-variant bg-surface px-3.5 py-2 font-body-md text-on-surface focus:outline-none focus:border-primary">
-            </div>
-            <div>
-                <label class="font-label-md text-on-surface block mb-1">Ringkasan Pengalaman</label>
-                <textarea name="experience" rows="3" class="w-full rounded-xl border border-outline-variant bg-surface px-3.5 py-2 font-body-md text-on-surface focus:outline-none focus:border-primary">{{ $user['experience'] ?? 'Barista paruh waktu selama 6 bulan di Warkop Mbois Manyar. Terbiasa menggunakan sistem POS Moka, ramah pelanggan, dan teliti dalam pembukuan kas harian.' }}</textarea>
-            </div>
-            <div class="flex items-center justify-end gap-2 pt-2">
-                <button type="button" onclick="document.getElementById('modalEditProfil').classList.add('hidden')" class="px-4 py-2 rounded-xl font-label-lg text-on-surface-variant hover:bg-surface-container">
+            <div class="flex items-center gap-3 w-full sm:w-auto justify-end">
+                <button class="px-5 py-2.5 rounded-full bg-slate-100 hover:bg-slate-200 text-ink font-semibold text-xs transition"
+                        onclick="window.history.back()" type="button">
                     Batal
                 </button>
-                <button type="submit" class="px-5 py-2 rounded-xl font-label-lg bg-primary text-on-primary hover:bg-primary-container shadow-sm">
-                    Simpan Perubahan
+                <button class="px-7 py-2.5 rounded-full bg-primary text-white hover:bg-blue-700 transition font-semibold text-xs shadow-xs flex items-center gap-1.5" type="submit">
+                    <span class="material-symbols-outlined text-[17px]">save</span>
+                    <span>Simpan Perubahan</span>
                 </button>
             </div>
+        </div>
+    </form>
+
+    <!-- Form Logout Breeze -->
+    <div class="flex justify-start">
+        <form method="POST" action="{{ route('logout') }}" onsubmit="return confirm('Yakin ingin keluar dari akun ini?')">
+            @csrf
+            <button type="submit" class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold text-red-600 hover:bg-red-50 transition">
+                <span class="material-symbols-outlined text-[18px]">logout</span>
+                <span>Logout dari Akun</span>
+            </button>
         </form>
+    </div>
+
+    <!-- Save Notification Toast -->
+    <div class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none" id="saveToast">
+        <div class="bg-slate-900 text-white px-5 py-3 rounded-xl shadow-xl flex items-center gap-2.5">
+            <span class="material-symbols-outlined text-emerald-400 text-[20px]">verified</span>
+            <span class="text-xs font-semibold" id="toastMessage">Profil berhasil diperbarui dan disimpan!</span>
+        </div>
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    function previewAvatar(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const box = document.getElementById('avatarPreviewBox');
+            box.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover" alt="Foto Profil">`;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function toggleAddInterest(show) {
+        const inputWrapper = document.getElementById('addInterestInputWrapper');
+        const openBtn = document.getElementById('openAddInterestBtn');
+        const input = document.getElementById('newInterestInput');
+
+        if (show) {
+            inputWrapper.classList.remove('hidden');
+            openBtn.classList.add('hidden');
+            input.focus();
+        } else {
+            inputWrapper.classList.add('hidden');
+            openBtn.classList.remove('hidden');
+            input.value = '';
+        }
+    }
+
+    function addNewInterest() {
+        const input = document.getElementById('newInterestInput');
+        const val = input.value.trim();
+        if (!val) return;
+
+        const container = document.getElementById('interestsContainer');
+        const chip = document.createElement('span');
+        chip.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary-light text-primary text-xs font-semibold';
+        chip.innerHTML = `
+            <span>${val}</span>
+            <button type="button" onclick="this.parentElement.remove()" class="hover:text-red-600 transition-colors flex items-center justify-center">
+                <span class="material-symbols-outlined text-[15px]">close</span>
+            </button>
+        `;
+        container.appendChild(chip);
+
+        input.value = '';
+        toggleAddInterest(false);
+    }
+
+    function addCustomSocialLink() {
+        const container = document.getElementById('socialLinksContainer');
+        const linkDiv = document.createElement('div');
+        linkDiv.className = 'relative flex items-center';
+        linkDiv.innerHTML = `
+            <div class="absolute left-3 w-6 h-6 rounded-md bg-primary-light flex items-center justify-center text-primary">
+                <span class="material-symbols-outlined text-[15px]">language</span>
+            </div>
+            <input type="text" name="customUrl[]" class="w-full bg-slate-50 border border-slate-200 focus:bg-white focus:border-primary rounded-xl py-2.5 pl-11 pr-10 text-ink text-xs outline-none" placeholder="https://website-atau-portofolio-kamu.com">
+            <button type="button" onclick="this.parentElement.remove()" class="absolute right-3 text-muted hover:text-red-600 transition-colors">
+                <span class="material-symbols-outlined text-[17px]">delete</span>
+            </button>
+        `;
+        container.appendChild(linkDiv);
+    }
+
+    function showSaveToast(customMsg) {
+        const toast = document.getElementById('saveToast');
+        const msgElement = document.getElementById('toastMessage');
+        msgElement.textContent = customMsg || 'Profil berhasil diperbarui dan disimpan!';
+        toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+        setTimeout(() => {
+            toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+        }, 3000);
+    }
+</script>
+@endpush
