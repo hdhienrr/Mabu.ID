@@ -11,6 +11,8 @@ Route::get('/', function () {
 // Dashboard MABU (7 Halaman Utama) - butuh login
 Route::middleware('auth')->prefix('dashboard')->name('mabu.')->group(function () {
     Route::view('/profil', 'mabu.profil')->name('profil');
+    Route::view('/profil/data-diri', 'mabu.profil.data-diri')->name('profil.data-diri');
+    Route::view('/profil/pengalaman', 'mabu.profil.pengalaman')->name('profil.pengalaman');
     Route::view('/lowongan', 'mabu.lowongan')->name('lowongan');
     Route::view('/rekomendasi', 'mabu.rekomendasi')->name('rekomendasi');
     Route::view('/jadwal', 'mabu.jadwal')->name('jadwal');
