@@ -4,11 +4,11 @@
     $masihBekerja = (bool) ($experience['is_current'] ?? false);
 @endphp
 
-<div data-experience-item class="p-4 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-4">
+<div data-experience-item class="p-4 rounded-2xl border border-slate-200 space-y-4">
     <div class="flex items-center justify-between">
-        <h3 class="font-label-lg text-label-lg text-on-surface">Pengalaman</h3>
+        <h3 class="text-sm font-bold text-ink">Pengalaman</h3>
         <button type="button" data-experience-remove
-            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg font-label-md text-label-md text-error hover:bg-error-container transition-colors">
+            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold text-red-600 hover:bg-red-50 transition-colors">
             <span class="material-symbols-outlined text-[16px]">delete</span>
             <span>Hapus</span>
         </button>
@@ -22,9 +22,9 @@
 
         <x-mabu.input label="Jenis Pekerjaan" type="select" :name="$awalan.'[type]'" :value="$experience['type'] ?? null"
             :options="$jenisPekerjaan" required />
-        <label class="flex items-center gap-2 sm:pt-6 font-body-md text-body-md text-on-surface cursor-pointer">
+        <label class="flex items-center gap-2 sm:pt-6 text-xs font-medium text-ink cursor-pointer">
             <input type="checkbox" name="{{ $awalan }}[is_current]" value="1" data-experience-current
-                @checked($masihBekerja) class="w-4 h-4 accent-primary">
+                @checked($masihBekerja) class="w-4 h-4 rounded border-slate-300 text-primary focus:ring-primary/30">
             <span>Masih bekerja di sini</span>
         </label>
 

@@ -16,24 +16,24 @@
     $terkunci = $attributes->has('readonly');
 
     $atribut = $attributes->class([
-        'w-full rounded-xl border px-3.5 py-2 font-body-md text-body-md',
-        'focus:outline-none focus:border-primary',
-        'disabled:bg-surface-container disabled:text-on-surface-variant disabled:cursor-not-allowed',
-        $terkunci ? 'bg-surface-container text-on-surface-variant cursor-not-allowed' : 'bg-surface text-on-surface',
-        $errors->has($kunci) ? 'border-error' : 'border-outline-variant',
+        'w-full rounded-xl border px-3.5 py-2.5 text-xs transition outline-none',
+        'placeholder:text-slate-400 focus:border-primary focus:ring-0',
+        'disabled:bg-slate-100 disabled:text-muted disabled:cursor-not-allowed',
+        $terkunci ? 'bg-slate-100 text-muted cursor-not-allowed' : 'bg-slate-50 text-ink focus:bg-white',
+        $errors->has($kunci) ? 'border-red-500' : 'border-slate-200',
     ]);
 @endphp
 
 <div>
-    <label for="{{ $id }}" class="font-label-md text-label-md text-on-surface block mb-1">
+    <label for="{{ $id }}" class="block text-xs font-bold text-ink mb-1.5">
         {{ $label }}
         @if ($required)
-            <span class="text-error">*</span>
+            <span class="text-red-500">*</span>
         @endif
     </label>
 
     @if ($type === 'select')
-        <select id="{{ $id }}" name="{{ $name }}" @required($required) {{ $atribut }}>
+        <select id="{{ $id }}" name="{{ $name }}" @required($required) {{ $atribut->merge(['class' => 'pr-10']) }}>
             <option value="" disabled @selected(blank($nilai))>Pilih {{ strtolower($label) }}</option>
             @foreach ($options as $pilihan => $teks)
                 <option value="{{ $pilihan }}" @selected((string) $nilai === (string) $pilihan)>{{ $teks }}</option>
@@ -46,10 +46,10 @@
     @endif
 
     @if ($hint)
-        <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">{{ $hint }}</p>
+        <p class="text-xs text-muted mt-1">{{ $hint }}</p>
     @endif
 
     @error($kunci)
-        <p class="font-body-sm text-body-sm text-error mt-1">{{ $message }}</p>
+        <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
     @enderror
 </div>

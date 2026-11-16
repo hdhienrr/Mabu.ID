@@ -3,27 +3,27 @@
 <div data-tag-input data-max="{{ $max }}" data-values="{{ json_encode(old($name, $values)) }}" class="space-y-3">
     <div class="flex items-center gap-2">
         <input type="text" data-tag-field maxlength="40" placeholder="{{ $placeholder }}" aria-label="{{ $placeholder }}"
-            class="w-full rounded-xl border border-outline-variant bg-surface px-3.5 py-2 font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary">
+            class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs text-ink transition outline-none placeholder:text-slate-400 focus:bg-white focus:border-primary focus:ring-0">
         <button type="button" data-tag-add
-            class="shrink-0 px-4 py-2 rounded-xl font-label-lg text-label-lg text-primary bg-primary-fixed/60 hover:bg-primary-fixed transition-colors">
+            class="shrink-0 px-4 py-2.5 rounded-xl text-xs font-semibold text-primary bg-primary-light hover:bg-blue-100 transition-colors">
             Tambah
         </button>
     </div>
 
-    <p data-tag-message class="hidden font-body-sm text-body-sm text-error"></p>
+    <p data-tag-message class="hidden text-xs text-red-600"></p>
 
     <ul data-tag-list class="flex flex-wrap gap-2"></ul>
 
-    <p class="font-body-sm text-body-sm text-on-surface-variant">
+    <p class="text-xs text-muted">
         <span data-tag-count>0</span> dari {{ $max }} terisi
     </p>
 
     @if ($suggestions)
         <div class="flex flex-wrap items-center gap-2">
-            <span class="font-body-sm text-body-sm text-on-surface-variant">Saran:</span>
+            <span class="text-xs text-muted">Saran:</span>
             @foreach ($suggestions as $saran)
                 <button type="button" data-tag-suggestion="{{ $saran }}"
-                    class="px-3 py-1 rounded-full border border-outline-variant font-label-md text-label-md text-on-surface-variant hover:border-primary hover:text-primary transition-colors">
+                    class="px-3 py-1 rounded-full border border-slate-200 text-xs font-semibold text-muted hover:border-primary hover:text-primary transition-colors">
                     + {{ $saran }}
                 </button>
             @endforeach
@@ -31,11 +31,11 @@
     @endif
 
     @error($name)
-        <p class="font-body-sm text-body-sm text-error">{{ $message }}</p>
+        <p class="text-xs text-red-600">{{ $message }}</p>
     @enderror
 
     <template data-tag-template>
-        <li class="inline-flex items-center gap-1 pl-3 pr-1.5 py-1 rounded-full bg-primary-fixed text-on-primary-fixed-variant font-label-md text-label-md">
+        <li class="inline-flex items-center gap-1 pl-3 pr-1.5 py-1 rounded-full bg-primary-light text-primary text-xs font-semibold">
             <span data-tag-text></span>
             <button type="button" data-tag-remove aria-label="Hapus"
                 class="w-5 h-5 rounded-full flex items-center justify-center hover:bg-primary/15">

@@ -1,27 +1,27 @@
 @props(['name' => 'photo', 'src' => null, 'initials' => '?'])
 
 <div class="flex items-center gap-4" data-photo-input>
-    <div class="w-20 h-20 rounded-full bg-primary-fixed text-primary flex items-center justify-center overflow-hidden shrink-0">
+    <div class="w-20 h-20 rounded-full bg-primary-light text-primary flex items-center justify-center overflow-hidden shrink-0">
         <img data-photo-preview src="{{ $src }}" alt="Foto profil"
             @class(['w-full h-full object-cover', 'hidden' => blank($src)])>
-        <span data-photo-initials @class(['font-headline-md text-headline-md', 'hidden' => filled($src)])>
+        <span data-photo-initials @class(['font-heading text-xl font-bold', 'hidden' => filled($src)])>
             {{ $initials }}
         </span>
     </div>
 
     <div>
         <label for="{{ $name }}"
-            class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl font-label-lg text-label-lg text-primary bg-primary-fixed/60 hover:bg-primary-fixed cursor-pointer transition-colors">
+            class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold text-primary bg-primary-light hover:bg-blue-100 cursor-pointer transition-colors">
             <span class="material-symbols-outlined text-[18px]">upload</span>
             <span>Pilih Foto</span>
         </label>
         <input id="{{ $name }}" name="{{ $name }}" type="file" accept="image/jpeg,image/png" class="sr-only" data-photo-file>
 
-        <p class="font-body-sm text-body-sm text-on-surface-variant mt-1.5">Format JPG atau PNG, maksimal 2 MB.</p>
-        <p data-photo-error class="font-body-sm text-body-sm text-error mt-1 hidden"></p>
+        <p class="text-xs text-muted mt-1.5">Format JPG atau PNG, maksimal 2 MB.</p>
+        <p data-photo-error class="text-xs text-red-600 mt-1 hidden"></p>
 
         @error($name)
-            <p class="font-body-sm text-body-sm text-error mt-1">{{ $message }}</p>
+            <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
         @enderror
     </div>
 </div>

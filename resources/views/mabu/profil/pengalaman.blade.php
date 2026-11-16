@@ -17,17 +17,43 @@
         'organization' => 'Organisasi / relawan',
     ];
     $saranKeahlian = ['Desain Grafis', 'Event Crew', 'Fotografi', 'Microsoft Excel', 'Public Speaking'];
+
+    // Tab antarbagian profil, sama dengan yang ada di halaman Profil Pengguna.
+    $tabProfil = [
+        'mabu.profil' => 'Ringkasan & Akun',
+        'mabu.profil.data-diri' => 'Data Diri Lengkap',
+        'mabu.profil.pengalaman' => 'Pengalaman & Keahlian',
+    ];
 @endphp
 
-<div class="space-y-space-lg">
-    <header>
-        <h1 class="font-headline-md text-headline-md text-on-surface">Pengalaman & Keahlian</h1>
-        <p class="font-body-md text-body-md text-on-surface-variant">
-            Ceritakan pengalaman dan kemampuanmu supaya rekomendasi lowongan lebih tepat.
-        </p>
+<div class="max-w-6xl mx-auto space-y-6">
+    <header class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
+        <div class="space-y-0.5">
+            <div class="flex items-center gap-1.5 text-muted text-xs font-medium">
+                <a class="hover:text-primary transition-colors" href="{{ route('mabu.dashboard') }}">Main Page</a>
+                <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                <a class="hover:text-primary transition-colors" href="{{ route('mabu.profil') }}">Profil Pengguna</a>
+                <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                <span class="text-ink font-semibold">Pengalaman &amp; Keahlian</span>
+            </div>
+            <h1 class="font-heading text-2xl font-extrabold text-ink tracking-tight">Pengalaman &amp; Keahlian</h1>
+            <p class="text-xs text-muted">
+                Ceritakan pengalaman dan kemampuanmu supaya rekomendasi lowongan lebih tepat.
+            </p>
+        </div>
+
+        <nav class="flex flex-wrap items-center gap-2 pt-3 border-t border-slate-100" aria-label="Bagian profil">
+            @foreach ($tabProfil as $namaRoute => $label)
+                <a href="{{ route($namaRoute) }}" @class([
+                    'px-3.5 py-1.5 rounded-xl text-xs transition',
+                    'font-bold bg-primary text-white' => request()->routeIs($namaRoute),
+                    'font-semibold bg-slate-50 border border-slate-200 text-ink hover:bg-primary-light hover:text-primary' => ! request()->routeIs($namaRoute),
+                ])>{{ $label }}</a>
+            @endforeach
+        </nav>
     </header>
 
-    <form action="#" method="POST" class="space-y-space-lg">
+    <form action="#" method="POST" class="space-y-6">
         @csrf
 
         <x-mabu.card title="Pengalaman Kerja" description="Pekerjaan, magang, atau kegiatan organisasi yang pernah kamu jalani" icon="work_history">
@@ -37,12 +63,12 @@
                 @endforeach
             </div>
 
-            <p data-experience-empty class="hidden font-body-md text-body-md text-on-surface-variant text-center py-4">
+            <p data-experience-empty class="hidden text-xs text-muted text-center py-4">
                 Belum ada pengalaman. Tidak apa-apa, kamu tetap bisa melamar.
             </p>
 
             <button type="button" data-experience-add
-                class="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl border border-dashed border-primary/50 font-label-lg text-label-lg text-primary hover:bg-primary-fixed/40 transition-colors">
+                class="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl border border-dashed border-primary/50 text-xs font-semibold text-primary hover:bg-primary-light transition-colors">
                 <span class="material-symbols-outlined text-[18px]">add</span>
                 <span>Tambah Pengalaman</span>
             </button>
@@ -59,11 +85,11 @@
 
         <div class="flex items-center justify-end gap-2">
             <a href="{{ route('mabu.profil') }}"
-                class="px-4 py-2 rounded-xl font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container">
+                class="px-5 py-2.5 rounded-full text-xs font-semibold text-muted hover:bg-slate-100 hover:text-ink transition">
                 Batal
             </a>
             <button type="submit"
-                class="px-5 py-2 rounded-xl font-label-lg text-label-lg bg-primary text-on-primary hover:bg-primary-container shadow-sm">
+                class="px-7 py-2.5 rounded-full text-xs font-semibold bg-primary text-white hover:bg-blue-700 shadow-sm transition">
                 Simpan Perubahan
             </button>
         </div>
