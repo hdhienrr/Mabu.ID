@@ -33,9 +33,16 @@ class RegisteredUserController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'phone' => ['required', 'string', 'max:20', 'unique:'.User::class],
+            'phone' => [
+                'required',
+                'string',
+                'max:20',
+                'regex:/^[0-9]{10,14}$/',
+                'unique:'.User::class,
+            ],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'role' => ['nullable', 'string', 'in:jobseeker,employer,student,partner'],
+            'role' => ['required', 'string', 'in:jobseeker,employer'],
+            'terms' => ['accepted'],
         ], [
             'name.required' => 'Nama lengkap wajib diisi.',
             'email.required' => 'Email wajib diisi.',
@@ -60,7 +67,7 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
 
         Auth::login($user);
-
+        $request->session()->regenerate();
         return redirect()->route('mabu.profil')
             ->with('success', 'Pendaftaran akun berhasil! Selamat datang di MABU.');
     }
