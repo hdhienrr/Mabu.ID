@@ -16,8 +16,16 @@ Route::middleware('auth')->prefix('dashboard')->name('mabu.')->group(function ()
     Route::view('/profil/data-diri', 'mabu.profil.data-diri')->name('profil.data-diri');
     Route::view('/profil/pengalaman', 'mabu.profil.pengalaman')->name('profil.pengalaman');
 
+    Route::view('/lowongan', 'mabu.lowongan')->name('lowongan');
+
+    // --- TAMBAHAN ROUTE UNTUK SEARCH LOWONGAN ---
+    Route::get('/lowongan/search', function () {
+        // Nantinya ini diarahkan ke Controller, misal: [LowonganController::class, 'search']
+        return view('mabu.lowongan');
+    })->name('lowongan.search');
+    // ---------------------------------------------
+
     // Redirect sementara untuk route yang file view-nya sudah dihapus
-    Route::redirect('/lowongan', '/dashboard/dashboard')->name('lowongan');
     Route::redirect('/rekomendasi', '/dashboard/dashboard')->name('rekomendasi');
     Route::redirect('/lamaran', '/dashboard/dashboard')->name('lamaran');
     Route::redirect('/cv', '/dashboard/dashboard')->name('cv');
@@ -34,4 +42,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
